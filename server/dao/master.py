@@ -1,6 +1,7 @@
 from server import g
 from server.models import *
 
+
 # 主控机
 class Master:
     status = 0  # 运行状态 为1则处于运行状态
@@ -19,7 +20,7 @@ class Master:
 
     def init(self):
         self.status = 0
-        self.default_temp = g["default_temp"]#初始外界温度以及空调初始设置温度
+        self.default_temp = g["default_temp"]  # 初始外界温度以及空调初始设置温度
         self.temp_highLimit = g["temp_highLimit"]
         self.temp_lowLimit = g["temp_lowLimit"]
         self.feeRate_H = g["feeRate_H"]
@@ -27,22 +28,18 @@ class Master:
         self.feeRate_L = g["feeRate_L"]
         self.handleNum = g["handleNum"]
         self.cur_feeRate = self.feeRate_M  # 设置初始费率为中等
-        #删除所有请求
-        Request.delete()
-        #重置所有房间初始信息
+        # 删除所有请求
+        Request.objects.all().delete()
+        # 重置所有房间初始信息
         for item in User.objects.all():
-            if self.mode==0:
-                item.speed=0
-                item.tar_temp=22
+            if self.mode == 0:
+                item.speed = 0
+                item.tar_temp = 22
                 item.save()
-            elif self.mode==1:
-                item.speed=0;
-                item.tar_temp=28
+            elif self.mode == 1:
+                item.speed = 0;
+                item.tar_temp = 28
                 item.save()
-
-
-
-
 
     def run(self):
         pass

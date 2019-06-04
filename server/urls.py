@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-
+from .dao import slave
 urlpatterns = [
     path('', views.index, name='index'),
     path(r'test/', views.testb, name='login'),
@@ -11,7 +11,7 @@ urlpatterns = [
 
     path(r'slave/temp/<op>/<roomid>/', views.tempControl),  # 请求改变温度，op=high时增加一度，=low时减小
     path(r'slave/speed/<op>/<roomid>/', views.speedControl),  # 同上，风速改变一档
-    path(r'slave/turnon/<roomid>/', views.turnOn),  # 打开从控机
+    path(r'slave/turnon/<roomid>/', slave.turnOn),  # 打开从控机
     path(r'slave/turnoff/<roomid>/', views.turnOff),
 
     # 经理

@@ -1,5 +1,5 @@
 import threading
-from time import sleep
+import time
 from . import g
 from django.shortcuts import render
 from server.models import User, dailyreport, Request
@@ -38,7 +38,7 @@ def slave(request, roomid):
 
 # 登录注册客户信息
 def login(request, username):
-    u = User(roomid=username,cur_temp=g["default_temp"],tar_temp=g["default_temp"])
+    u = User(roomid=username, cur_temp=g["default_temp"], tar_temp=g["default_temp"])
     u.save()
     return render(request, 'index.html', {"test_str": username})
 
@@ -48,17 +48,17 @@ def tempControl(request, op, roomid):
         u = User.objects.get(roomid=roomid)
 
         if op == "high":
-            old_tar = u.tar_temp
             u.tar_temp += 1
-            new_tar = u.tar_temp
             u.save()
-            return render(request, 'index.html', {"test_str": "目标温度变从" + str(old_tar) + "变为" + str(new_tar)})
+            r = Request(roomid=roomid, temp=u.tar_temp, time=time.time())
+            r.save()
+            return render(request, 'index.html', {"test_str": "目标温度改变“”"})
         elif op == "low":
-            old_tar = u.tar_temp
             u.tar_temp -= 1
-            new_tar = u.tar_temp
             u.save()
-            return render(request, 'index.html', {"test_str": "目标温度变从" + str(old_tar) + "变为" + str(new_tar)})
+            r = Request(roomid=roomid, temp=u.tar_temp, time=time.time())
+            r.save()
+            return render(request, 'index.html', {"test_str": "目标温度改变“”"})
         else:
             return HttpResponse("wrong!!!please check url!", 404)
     except:
@@ -66,6 +66,21 @@ def tempControl(request, op, roomid):
 
 
 def speedControl(request, op, roomid):
+    try:
+        u = User.objects.get(roomid=roomid)
+
+        if op == "high":
+            r = Request(roomid=roomid, speed=u.speed + 1, time=time.time())
+            r.save()
+            return render(request, 'index.html', {"test_str": "目标风速改变请求加入队列“”"})
+        elif op == "low":
+            r = Request(roomid=roomid, speed=u.speed - 1, time=time.time())
+            r.save()
+            return render(request, 'index.html', {"test_str": "目标风速改变请求加入队列“”"})
+        else:
+            return HttpResponse("wrong!!!please check url!", 404)
+    except:
+        return HttpResponse("gg", 404)
     pass
 
 
@@ -98,7 +113,6 @@ def turnOff(request, roomid):
 # checkState(request):查看从控机信息
 # --------------------------------------------------------------------------
 def master(request):
-
     return HttpResponse("master")
 
 
@@ -146,6 +160,8 @@ def test(request, op, id):
     if request.method == "GET":
         print("op=" + str(op) + "   id=" + str(id))
     return HttpResponse("slave")
+
+
 def testb(request):
     sleep(1)
     print("b")
