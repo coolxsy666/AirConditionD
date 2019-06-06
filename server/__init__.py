@@ -1,4 +1,4 @@
-g = {"default_temp": 26,
+g = {"default_temp": 24,
      "temp_highLimit": 30,
      "temp_lowLimit": 18,
      "feeRate_H": 70,

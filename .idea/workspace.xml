@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="39f45575-5dc5-4c59-90fb-6cfb93950276" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AirConditionD/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/AirConditionD/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/dao/master.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/dao/master.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/dao/slave.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/dao/slave.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/test/testing.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/views.py" afterDir="false" />
     </list>
@@ -32,7 +32,23 @@
     <option name="HIDDEN_KINDS">
       <set />
     </option>
-    <expand />
+    <expand>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="db" type="feb32156:DbDataSourceImpl" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="db" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="db" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="main: schema" type="981a47c2:SqliteImplModel$Schema" />
+      </path>
+    </expand>
     <select />
   </component>
   <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
@@ -43,8 +59,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="20" column="18" selection-start-line="20" selection-start-column="18" selection-end-line="20" selection-end-column="18" />
+            <state relative-caret-position="211">
+              <caret line="27" column="37" selection-start-line="27" selection-start-column="37" selection-end-line="27" selection-end-column="37" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -52,41 +68,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="5" column="7" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="66">
-              <caret line="3" selection-start-line="3" selection-end-line="3" selection-end-column="35" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/dao/master.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="19" selection-start-line="19" selection-end-line="19" />
-              <folding>
-                <element signature="e#0#20#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="204">
+              <caret line="121" column="23" lean-forward="true" selection-start-line="121" selection-start-column="22" selection-end-line="121" selection-end-column="23" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/dao/slave.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1342">
-              <caret line="127" selection-start-line="127" selection-end-line="127" />
+            <state relative-caret-position="352">
+              <caret line="188" column="29" selection-start-line="188" selection-start-column="29" selection-end-line="188" selection-end-column="29" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -95,10 +90,34 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AirConditionD/wsgi.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="352">
+              <caret line="16" selection-start-line="16" selection-end-line="16" />
+              <folding>
+                <element signature="e#229#238#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="263">
+              <caret line="18" column="25" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+              <folding>
+                <element signature="e#27#56#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="22">
-              <caret line="1" column="26" selection-start-line="1" selection-start-column="26" selection-end-line="1" selection-end-column="26" />
+            <state relative-caret-position="66">
+              <caret line="3" column="21" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -131,25 +150,25 @@
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/readme.txt" />
         <option value="$PROJECT_DIR$/templates/index.html" />
-        <option value="$PROJECT_DIR$/server/models.py" />
         <option value="$PROJECT_DIR$/server/class/master.py" />
         <option value="$PROJECT_DIR$/server/test/test.py" />
-        <option value="$PROJECT_DIR$/server/__init__.py" />
         <option value="$PROJECT_DIR$/readme.md" />
         <option value="$PROJECT_DIR$/../python-hearthstone-master/setup.py" />
-        <option value="$PROJECT_DIR$/AirConditionD/settings.py" />
-        <option value="$PROJECT_DIR$/server/dao/master.py" />
         <option value="$PROJECT_DIR$/server/test/testing.py" />
+        <option value="$PROJECT_DIR$/AirConditionD/settings.py" />
         <option value="$PROJECT_DIR$/server/views.py" />
         <option value="$PROJECT_DIR$/server/urls.py" />
+        <option value="$PROJECT_DIR$/server/__init__.py" />
+        <option value="$PROJECT_DIR$/server/models.py" />
         <option value="$PROJECT_DIR$/server/dao/slave.py" />
+        <option value="$PROJECT_DIR$/server/dao/master.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-6" />
-    <option name="width" value="780" />
-    <option name="height" value="838" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="44" />
+    <option name="width" value="1052" />
+    <option name="height" value="620" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -199,8 +218,9 @@
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="database.console.LAST_STATE" value="true" />
     <property name="editor.config.ad.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../AirD/AirConditionD" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
@@ -262,24 +282,26 @@
       <updated>1559455309180</updated>
       <workItem from="1559455314834" duration="22164000" />
       <workItem from="1559527942588" duration="28278000" />
-      <workItem from="1559614647088" duration="411000" />
+      <workItem from="1559614647088" duration="25296000" />
+      <workItem from="1559718869317" duration="21206000" />
+      <workItem from="1559787620449" duration="4996000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="50853000" />
+    <option name="totallyTimeSpent" value="101940000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09328358" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.11727079" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.30477223" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.37744033" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.15580736" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3329718" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -287,13 +309,14 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.329718" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.17136659" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.2462039" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.3286334" />
+      <window_info anchor="bottom" id="Database Console" order="13" weight="0.329718" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="SciView" order="3" />
-      <window_info anchor="right" id="Database" order="4" weight="0.3297587" />
+      <window_info anchor="right" id="Database" order="4" weight="0.32942432" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -303,6 +326,17 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/AirD" />
     </ignored-roots>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/server/dao/master.py</url>
+          <line>102</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/AirConditionD/__init__.py">
@@ -365,28 +399,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AirConditionD/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="20" column="11" selection-start-line="20" selection-start-column="11" selection-end-line="20" selection-end-column="11" />
-          <folding>
-            <element signature="e#637#669#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/apps.py">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="29" selection-start-line="29" selection-end-line="29" />
-          <folding>
-            <element signature="e#27#56#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/readme.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
@@ -412,16 +426,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AirConditionD/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="506">
-          <caret line="32" selection-start-line="32" selection-end-line="32" />
-          <folding>
-            <element signature="e#314#323#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharm2018.3/system/python_stubs/-374116842/time.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="378">
@@ -431,13 +435,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server/test/__init__.py" />
     <entry file="file://$PROJECT_DIR$/server/testing.py" />
-    <entry file="file://F:/Python37/Lib/threading.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="884" selection-start-line="884" selection-end-line="884" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://F:/Python37/Lib/site-packages/django/db/models/manager.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="174">
@@ -445,20 +442,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://F:/Python37/Lib/concurrent/futures/thread.py">
+    <entry file="file://F:/Python37/Lib/concurrent/futures/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="78" selection-start-line="78" selection-end-line="78" />
+        <state>
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/urls.py">
+    <entry file="file://F:/Python37/Lib/concurrent/futures/thread.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="20" column="18" selection-start-line="20" selection-start-column="18" selection-end-line="20" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="226">
+          <caret line="58" selection-start-line="58" selection-end-line="58" />
         </state>
       </provider>
     </entry>
@@ -469,40 +463,125 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/server/migrations/0008_auto_20190604_1132.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/migrations/0009_remove_user_is_suspended.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/server/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" selection-start-line="3" selection-end-line="3" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/dao/master.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="19" selection-start-line="19" selection-end-line="19" />
+        <state relative-caret-position="264">
+          <caret line="45" selection-start-line="45" selection-end-line="45" />
           <folding>
-            <element signature="e#0#20#0" expanded="true" />
+            <element signature="e#0#16#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/AirConditionD/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="112" selection-start-line="112" selection-end-line="112" />
+          <folding>
+            <element signature="e#314#323#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AirConditionD/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="20" column="11" selection-start-line="20" selection-start-column="11" selection-end-line="20" selection-end-column="11" />
+          <folding>
+            <element signature="e#637#669#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://411dd870-affa-46ab-968d-4aef531c2bc9/schema/main/table/auth_user" />
     <entry file="file://$PROJECT_DIR$/server/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="1" column="26" selection-start-line="1" selection-start-column="26" selection-end-line="1" selection-end-column="26" />
+        <state relative-caret-position="66">
+          <caret line="3" column="21" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server/tests.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://F:/Python37/Lib/threading.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="864" selection-start-line="864" selection-end-line="864" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/Python37/Lib/site-packages/django/core/handlers/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="393">
+          <caret line="130" selection-start-line="130" selection-end-line="130" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/Python37/Lib/site-packages/django/utils/deprecation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="94" selection-start-line="94" selection-end-line="94" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/Python37/Lib/site-packages/django/core/handlers/exception.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="34" selection-start-line="34" selection-end-line="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AirConditionD/wsgi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
+          <folding>
+            <element signature="e#229#238#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="263">
+          <caret line="18" column="25" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+          <folding>
+            <element signature="e#27#56#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="211">
+          <caret line="27" column="37" selection-start-line="27" selection-start-column="37" selection-end-line="27" selection-end-column="37" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/server/dao/slave.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1342">
-          <caret line="127" selection-start-line="127" selection-end-line="127" />
+        <state relative-caret-position="352">
+          <caret line="188" column="29" selection-start-line="188" selection-start-column="29" selection-end-line="188" selection-end-column="29" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/dao/master.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="121" column="23" lean-forward="true" selection-start-line="121" selection-start-column="22" selection-end-line="121" selection-end-column="23" />
         </state>
       </provider>
     </entry>
