@@ -22,6 +22,7 @@ class User(models.Model):
     tar_temp = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     cur_temp = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     speed = models.IntegerField(default=0)
+    energy =models.IntegerField(default=0)
     cost = models.DecimalField(max_digits=7, decimal_places=2, default=0)
     serve_time = models.IntegerField(default=0)
     wait_time = models.IntegerField(default=0)
