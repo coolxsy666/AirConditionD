@@ -49,6 +49,8 @@ class Master:
             item.state = 0
             item.cur_temp = item.tar_temp = self.default_temp
             item.is_suspended = 0
+            item.serve_time = 0
+            item.wait_time = 0
             item.save()
 
     def run(self):
@@ -83,40 +85,54 @@ class Master:
 
     def Dispatch(self):
         count = 0
-
+        save_instance = 1  # 是否需要保存instance
         speed_equal = 0
         # 状态判断
         if self.instance.state == 0:
             # 从控机关机，查找在哪个队列里
             self.state_time = 0  # 服务状态变化
-            if self.serviceQueue.count(self.instance) == 0:
-                self.waitQueue.remove(self.instance)
+            # 如果不在等待队列里
+            if self.find_repeat(self.instance, self.waitQueue) == 0:
+                temp = self.return_repeat(self.instance, self.serviceQueue)
+                self.serviceQueue.remove(temp)
+            # 如果不在服务队列里
+            elif self.find_repeat(self.instance, self.serviceQueue) == 0:
+                temp = self.return_repeat(self.instance, self.waitQueue)
+                self.waitQueue.remove(temp)
             else:
-                self.serviceQueue.remove(self.instance)
-                self.state_time = 0  # 服务状态变化 :
-
+                print("!!!!!!!!!!!!!!!!从控机关机，服务等待队列中都找不到此从机")
+        # 判断是否是新的空调开机(此时服务队列未满
         elif len(self.serviceQueue) < self.handleNum and self.find_repeat(self.instance,
-                                                                          self.serviceQueue) == 0:  # 判断是否是新的空调开机
+                                                                          self.serviceQueue) == 0:
             self.serviceQueue.append(self.instance)
             self.state_time = 0  # 服务状态变化
             self.instance.state = 1
+        # 判断是否是新的空调开机(此时服务队列已满
         elif self.find_repeat(self.instance, self.waitQueue) == 0 and self.find_repeat(self.instance,
                                                                                        self.serviceQueue) == 0:
-            self.instance.wait_time = 10
+            self.instance.wait_time = 16
             self.instance.state = 2
             self.waitQueue.append(self.instance)  # 放入等待队列
+        # 其他的情况就是服务或是等待队列中的从机风速发生变化,或者时间片调度
         else:
             for x in self.serviceQueue:
                 if self.instance.speed > x.speed:
                     count = count + 1
             if count == 1:
-                self.serviceQueue[self.find_max_sp()].wait_time = 120  # 分配一个等待服务时长
-                self.serviceQueue[self.find_max_sp()].state = 2
-                self.waitQueue.append(self.serviceQueue.pop(self.find_max_sp()))  # 进入等待队列
+
+                max = self.serviceQueue[self.find_max_sp()]
+                self.serviceQueue.remove(max)
+                max.wait_time = 40  # 分配一个等待服务时长
+                max.state = 2
+                self.waitQueue.append(max)  # 进入等待队列
+                max.save()
+
                 self.instance.state = 1
-                self.waitQueue.remove(self.instance)
+                temp = self.return_repeat(self.instance, self.waitQueue)
+                self.waitQueue.remove(temp)
                 self.serviceQueue.append(self.instance)
                 self.state_time = 0  # 服务状态变化
+
             elif count > 1:
                 x = 0
                 while x < self.handleNum - 1:
@@ -124,43 +140,63 @@ class Master:
                         speed_equal = speed_equal + 1
                     x += 1
                 if speed_equal == 0:  # 没有风速相等的
-                    self.serviceQueue[self.find_min()].wait_time = 120  # 分配一个等待服务时长
-                    self.serviceQueue[self.find_min()].state = 2
-                    self.waitQueue.append(self.serviceQueue.pop(self.find_min()))  # 取出服务队列中风速最小的
+                    min = self.serviceQueue[self.find_min()]
+                    self.serviceQueue.remove(min)
+                    min.wait_time = 40  # 分配一个等待服务时长
+                    min.state = 2
+                    self.waitQueue.append(min)  # 取出服务队列中风速最小的
+                    min.save()
+
                     self.instance.state = 1
-                    self.waitQueue.remove(self.instance)
+                    temp = self.return_repeat(self.instance, self.waitQueue)
+                    self.waitQueue.remove(temp)
                     self.serviceQueue.append(self.instance)  # 进入服务队列
                     self.state_time = 0  # 服务状态变化
+
                 else:
-                    self.serviceQueue[self.find_max()].wait_time = 120  # 分配一个等待服务时长
-                    self.serviceQueue[self.find_max()].state = 2
-                    self.waitQueue.append(self.serviceQueue.pop(self.find_max()))  # 取出服务队列中服务时长最长的
+                    max = self.serviceQueue[self.find_max()]
+                    self.serviceQueue.remove(max)
+                    max.wait_time = 40  # 分配一个等待服务时长
+                    max.state = 2
+                    self.waitQueue.append(max)  # 取出服务队列中服务时长最长的
+                    max.save()
+
                     self.instance.state = 1
-                    self.waitQueue.remove(self.instance)
+                    temp = self.return_repeat(self.instance, self.waitQueue)
+                    self.waitQueue.remove(temp)
                     self.serviceQueue.append(self.instance)  # 进入服务队列
                     self.state_time = 0  # 服务状态变化
+
             elif count == 0:
                 # 启动时间片调度
                 # if 两分钟没有状态变化
-
+                # 取出服务队列中服务时长最长的，将风速置为(0)，状态置为被挂起(2)，放入等待队列
+                # 再将等待时间最长的状态置为开启，放入服务队列
                 for x in self.waitQueue:
                     if x.wait_time == 0:
                         max = self.serviceQueue[self.find_max()]
-                        max.wait_time = 120
+                        max.wait_time = 40
+
                         max.state = 2
+                        max.speed = 0
                         max.save()
                         self.waitQueue.append(max)
-                        self.serviceQueue.remove(max)
-                        # 取出服务队列中服务时长最长的
+                        temp = self.return_repeat(max, self.waitQueue)
+                        self.serviceQueue.remove(temp)
+
                         x.state = 1
+                        x.wait_time = 40
+                        x.serve_time = 0
                         self.serviceQueue.append(x)  # 进入服务队列
-                        self.waitQueue.remove(x)
+                        temp = self.return_repeat(x, self.waitQueue)
+                        self.waitQueue.remove(temp)
 
                         self.state_time = 0  # 服务状态变化
                         x.save()
-                        break
-
-        self.instance.save()
+                        # 这里是因为时间片调度不需要保存instance
+                        save_instance = 0
+        if save_instance:
+            self.instance.save()
         print("服务队列")
         for x in self.serviceQueue:
             print(x.roomid)
@@ -168,10 +204,21 @@ class Master:
         for x in self.waitQueue:
             print(x.roomid)
 
+    # 一个房间在队列中的属性和数据库中的属性不同，所以要通过获取id值进行队列操作
+    # 查找队列中是否存在instance
     def find_repeat(self, instance, queue):
         for x in queue:
             if instance.roomid == x.roomid:
                 return 1
+
+        return 0
+
+    # 返回队列中的instance,
+    # Attention!要删除队列中某一个对象时要用到此函数
+    def return_repeat(self, instance, queue):
+        for x in queue:
+            if instance.roomid == x.roomid:
+                return x
         return 0
 
     # 返回最小值所在位置
@@ -198,21 +245,26 @@ class Master:
 
         return list.index(max(list))
 
+    def setInstance(self, instance):
+        self.instance = instance
+
     def fresh(self, duration):
 
         for x in self.waitQueue:
             y = User.objects.get(roomid=x.roomid)
 
             y.wait_time -= duration
+            if y.wait_time < 0: y.wait_time = 0
             x.wait_time = y.wait_time
             print(str(x.roomid) + " wait_time=" + str(x.wait_time))
+
             y.save()
             if x.wait_time == 0:
                 self.instance = x
                 self.Dispatch()
 
         for x in self.serviceQueue:
-            x = User.objects.get(roomid=x.roomid)
+
             y = User.objects.get(roomid=x.roomid)
             y.serve_time += duration
             x.serve_time = y.serve_time

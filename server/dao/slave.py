@@ -170,29 +170,35 @@ def login(request, username):
 
 # 从控机开机
 def turnOn(request, roomid):
-
     u = User.objects.get(roomid=roomid)
     slave = Slave()
     slave.init(roomid, g["default_temp"])
     executor.submit(slave.run)
-    if u.state==0:
+    if u.state == 0:
         u.state = 2
         u.save()
         # t=Request.objects.filter(roomid='12')
         # during=time.time()-time.mktime(t[0].time.timetuple())
 
-        m.instance = u
+        m.setInstance(u)
         m.Dispatch()
 
         return HttpResponse("开启")
 
     return HttpResponse("开机失败")
+
+
 # 从控机关机
 def turnOff(request, roomid):
     try:
         u = User.objects.get(roomid=roomid)
         u.state = 0
+        u.speed = 0
         u.save()
+
+        m.setInstance(u)
+        m.Dispatch()
+
         r = dailyreport.objects.get(roomid=roomid)
         r.use_times += 1
         r.save()
@@ -231,7 +237,7 @@ def speedControl(request, op, roomid):
             r = Request(roomid=roomid, temp=u.cur_temp, speed=u.speed + 1, time=time.time())
             r.save()
 
-            if m.waitQueue.count(u) != 0:
+            if m.find_repeat(u, m.waitQueue):
                 u.speed += 1
                 m.instance = u
                 m.Dispatch()
@@ -243,7 +249,7 @@ def speedControl(request, op, roomid):
             r = Request(roomid=roomid, temp=u.cur_temp, speed=u.speed - 1, time=time.time())
             r.save()
             m.instance = u
-            if m.waitQueue.count(u) != 0:
+            if m.find_repeat(u, m.waitQueue):
                 m.Dispatch()
             else:
                 u.speed -= 1
