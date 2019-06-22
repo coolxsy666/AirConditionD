@@ -2,7 +2,10 @@ from concurrent.futures.thread import ThreadPoolExecutor
 import json
 import time
 
+from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
 from server import g
 from server.models import *
@@ -38,7 +41,7 @@ class Master:
         self.feeRate_M = g["feeRate_M"]
         self.feeRate_L = g["feeRate_L"]
         self.handleNum = g["handleNum"]
-        self.cur_feeRate = self.feeRate_M  # 设置初始费率为中等
+        self.cur_feeRate = self.feeRate_M  # 默认设置初始费率为中等
         self.last_time = 0
         # 删除所有请求
         Request.objects.all().delete()
@@ -54,7 +57,7 @@ class Master:
             item.save()
 
     def run(self):
-        duration = 2
+        duration = 3
         while (True):
             if not self.status: continue
             if time.time() - self.last_time > duration:
@@ -89,6 +92,7 @@ class Master:
         speed_equal = 0
         # 状态判断
         if self.instance.state == 0:
+            print("----------关机调度------------")
             # 从控机关机，查找在哪个队列里
             self.state_time = 0  # 服务状态变化
             # 如果不在等待队列里
@@ -101,15 +105,32 @@ class Master:
                 self.waitQueue.remove(temp)
             else:
                 print("!!!!!!!!!!!!!!!!从控机关机，服务等待队列中都找不到此从机")
+        # 当某个空调到达设定温度后，状态为被挂起，放入等待队列
+        elif self.instance.state == 2 and self.find_repeat(self.instance, self.serviceQueue) == 1:
+            print("----------达到设定温度调度------------")
+
+            temp = self.return_repeat(self.instance, self.serviceQueue)
+            self.serviceQueue.remove(temp)
+
+            u = User.objects.get(roomid=temp.roomid)
+            u.wait_time = 60
+            u.speed = 0
+            u.save()
+            self.waitQueue.append(u)
         # 判断是否是新的空调开机(此时服务队列未满
-        elif len(self.serviceQueue) < self.handleNum and self.find_repeat(self.instance,
-                                                                          self.serviceQueue) == 0:
+        elif len(self.serviceQueue) < self.handleNum and self.find_repeat(self.instance, self.serviceQueue) == 0:
+            print("----------新空调开机调度，服务队列未满------------")
+            # 若是达到了目标温度的空调再次加入服务，则需要将其从等待队列删除
+            if self.find_repeat(self.instance, self.waitQueue) == 1:
+                self.waitQueue.remove(self.return_repeat(self.instance, self.waitQueue))
             self.serviceQueue.append(self.instance)
             self.state_time = 0  # 服务状态变化
             self.instance.state = 1
         # 判断是否是新的空调开机(此时服务队列已满
         elif self.find_repeat(self.instance, self.waitQueue) == 0 and self.find_repeat(self.instance,
                                                                                        self.serviceQueue) == 0:
+            print("----------新空调开机调度，服务队列满了------------")
+
             self.instance.wait_time = 16
             self.instance.state = 2
             self.waitQueue.append(self.instance)  # 放入等待队列
@@ -119,9 +140,11 @@ class Master:
                 if self.instance.speed > x.speed:
                     count = count + 1
             if count == 1:
+                print("----------只比一个风速大------------")
+                max_temp = self.serviceQueue[self.find_max_sp()]
 
-                max = self.serviceQueue[self.find_max_sp()]
-                self.serviceQueue.remove(max)
+                self.serviceQueue.remove(max_temp)
+                max = User.objects.get(roomid=max_temp.roomid)
                 max.wait_time = 40  # 分配一个等待服务时长
                 max.state = 2
                 self.waitQueue.append(max)  # 进入等待队列
@@ -134,14 +157,17 @@ class Master:
                 self.state_time = 0  # 服务状态变化
 
             elif count > 1:
+                print("----------比多个风速大------------")
                 x = 0
                 while x < self.handleNum - 1:
                     if self.serviceQueue[x].speed == self.serviceQueue[x + 1].speed:
                         speed_equal = speed_equal + 1
                     x += 1
                 if speed_equal == 0:  # 没有风速相等的
-                    min = self.serviceQueue[self.find_min()]
-                    self.serviceQueue.remove(min)
+
+                    min_temp = self.serviceQueue[self.find_min()]
+                    self.serviceQueue.remove(min_temp)
+                    min = User.objects.get(roomid=min_temp.roomid)
                     min.wait_time = 40  # 分配一个等待服务时长
                     min.state = 2
                     self.waitQueue.append(min)  # 取出服务队列中风速最小的
@@ -154,8 +180,10 @@ class Master:
                     self.state_time = 0  # 服务状态变化
 
                 else:
-                    max = self.serviceQueue[self.find_max()]
-                    self.serviceQueue.remove(max)
+                    print("----------比所有的风速都小------------")
+                    temp_max = self.serviceQueue[self.find_max()]
+                    self.serviceQueue.remove(temp_max)
+                    max = User.objects.get(roomid=temp_max.roomid)
                     max.wait_time = 40  # 分配一个等待服务时长
                     max.state = 2
                     self.waitQueue.append(max)  # 取出服务队列中服务时长最长的
@@ -168,41 +196,48 @@ class Master:
                     self.state_time = 0  # 服务状态变化
 
             elif count == 0:
+                print("----------时间片调度------------")
                 # 启动时间片调度
                 # if 两分钟没有状态变化
                 # 取出服务队列中服务时长最长的，将风速置为(0)，状态置为被挂起(2)，放入等待队列
                 # 再将等待时间最长的状态置为开启，放入服务队列
                 for x in self.waitQueue:
                     if x.wait_time == 0:
-                        max = self.serviceQueue[self.find_max()]
-                        max.wait_time = 40
+                        # 若服务队列中有对象
+                        if (len(self.serviceQueue) != 0):
+                            temp_max = self.serviceQueue[self.find_max()]
+                            self.serviceQueue.remove(temp_max)
 
-                        max.state = 2
-                        max.speed = 0
-                        max.save()
-                        self.waitQueue.append(max)
-                        temp = self.return_repeat(max, self.waitQueue)
-                        self.serviceQueue.remove(temp)
+                            max = User.objects.get(roomid=temp_max.roomid)
+                            max.wait_time = 40
+                            max.state = 2
+                            max.speed = 0
+                            max.save()
+                            self.waitQueue.append(max)
 
-                        x.state = 1
-                        x.wait_time = 40
-                        x.serve_time = 0
-                        self.serviceQueue.append(x)  # 进入服务队列
-                        temp = self.return_repeat(x, self.waitQueue)
+                        x_temp = User.objects.get(roomid=x.roomid)
+                        x_temp.state = 1
+                        x_temp.wait_time = 40
+                        x_temp.serve_time = 0
+                        temp = self.return_repeat(x_temp, self.waitQueue)
                         self.waitQueue.remove(temp)
+                        self.serviceQueue.append(x_temp)  # 进入服务队列
 
                         self.state_time = 0  # 服务状态变化
-                        x.save()
+                        x_temp.save()
                         # 这里是因为时间片调度不需要保存instance
                         save_instance = 0
+
+                        break
         if save_instance:
             self.instance.save()
-        print("服务队列")
+        print("服务队列：", end=' ')
         for x in self.serviceQueue:
-            print(x.roomid)
-        print("等待队列")
+            print(x.roomid, end=',')
+        print("等待队列：", end=' ')
         for x in self.waitQueue:
-            print(x.roomid)
+            print(x.roomid, end=',')
+        print(" ###########   ")
 
     # 一个房间在队列中的属性和数据库中的属性不同，所以要通过获取id值进行队列操作
     # 查找队列中是否存在instance
@@ -250,28 +285,33 @@ class Master:
 
     def fresh(self, duration):
 
-        for x in self.waitQueue:
-            y = User.objects.get(roomid=x.roomid)
+        if self.status == 1:
+            for x in self.waitQueue:
+                y = User.objects.get(roomid=x.roomid)
 
-            y.wait_time -= duration
-            if y.wait_time < 0: y.wait_time = 0
-            x.wait_time = y.wait_time
-            print(str(x.roomid) + " wait_time=" + str(x.wait_time))
+                y.wait_time -= duration
+                if y.wait_time < 0: y.wait_time = 0
+                x.wait_time = y.wait_time
+                print(str(x.roomid) + " wait_time=" + str(x.wait_time))
 
-            y.save()
-            if x.wait_time == 0:
-                self.instance = x
-                self.Dispatch()
+                y.save()
+                if x.wait_time == 0:
+                    self.instance = y
 
-        for x in self.serviceQueue:
+                    daily_temp = dailyreport.objects.get(roomid=y.roomid)
+                    daily_temp.dispatch_times += 1
+                    daily_temp.save()
 
-            y = User.objects.get(roomid=x.roomid)
-            y.serve_time += duration
-            x.serve_time = y.serve_time
-            print(str(x.roomid) + " serve_time=" + str(x.serve_time))
-            x.save()
-        self.state_time += duration
-        print("无服务状态变化持续时间state_time=" + str(self.state_time))
+                    self.Dispatch()
+
+            for x in self.serviceQueue:
+                y = User.objects.get(roomid=x.roomid)
+                y.serve_time += duration
+                x.serve_time = y.serve_time
+                print(str(x.roomid) + " serve_time=" + str(x.serve_time))
+                y.save()
+            self.state_time += duration
+            print("无服务状态变化持续时间state_time=" + str(self.state_time))
 
 
 m = Master()
@@ -287,7 +327,7 @@ executor = ThreadPoolExecutor(max_workers=1)
 # checkState(request):查看从控机信息
 # --------------------------------------------------------------------------
 def master(request):
-    return HttpResponse("master")
+    return render(request, "lcmanager.html")
 
 
 def startUP(request):
@@ -314,16 +354,67 @@ def editSlave(request):
     pass
 
 
+@csrf_exempt
 def setPara(request):
-    pass
+    if request.method == 'POST':
+        # print(request.POST['handleNum'])
+        g['handleNum'] = request.POST['handleNum']
+        g['default_temp'] = request.POST['defaultTemp']
+        g['mode'] = request.POST['mode']
+        feerate = request.POST['feerate']
+        if feerate == '1':
+            m.cur_feeRate = g['feeRate_L']
+        elif feerate == '2':
+            m.cur_feeRate = g['feeRate_M']
+        else:
+            m.cur_feeRate = g['feeRate_H']
+
+        return JsonResponse({"content": "修改成功！"})
+
+
+def checkMyState(request):
+    if m.cur_feeRate == g['feeRate_L']:
+        feerate = 1
+    elif m.cur_feeRate == g['feeRate_M']:
+        feerate = 2
+    else:
+        feerate = 3
+    data = {"status": m.status,
+            "mode": int(g['mode']),
+            "defaultTemp": int(g['default_temp']),
+            "feerate": feerate,
+            "handleNum": int(g['handleNum']), }
+    return JsonResponse(data)
 
 
 def checkState(request):
-    data = {"status:": m.status,
-            "mode:": m.mode,
-            "temp_highLimit:": m.temp_highLimit,
-            "temp_lowLimit:": m.temp_lowLimit,
-            "cur_feeRate:": m.cur_feeRate,
-            "handleNum:": m.handleNum, }
+    userList = User.objects.all()
+    data = {}
+    list = []
+    son = {'roomid': '',
+           'state': 0,
+           'cur_temp': 0,
+           'tar_temp': 0,
+           'speed': 0,
+           'cost': 0,
+           'serve_time': 0, }
+    for u in userList:
 
-    return JsonResponse(json.dumps(data), safe=False)
+        son['roomid'] = u.roomid
+        if u.state == 0:
+            state = "关机"
+        elif u.state == 2:
+            state = "暂时挂起"
+        else:
+            state = "运行中"
+        son['state'] = state
+        son['cur_temp'] = u.cur_temp
+        son['tar_temp'] = u.tar_temp
+        son['speed'] = u.speed
+        son['cost'] = u.cost
+        son['serve_time'] = u.serve_time
+        son_copy = son.copy()
+        list.append(son_copy)
+
+    data['items'] = list
+    return JsonResponse(data)

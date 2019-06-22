@@ -1,7 +1,7 @@
-g = {"default_temp": 24,
+g = {"default_temp": 25,
      "temp_highLimit": 30,
      "temp_lowLimit": 18,
-     "feeRate_H": 70,
+     "feeRate_H": 70,  #
      "feeRate_M": 50,
      "feeRate_L": 30,
      "handleNum": 3,

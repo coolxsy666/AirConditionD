@@ -1,0 +1,169 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>manager</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+      <link href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/jquery-ui-themes.css' %}" type="text/css" rel="stylesheet"/>
+    <link href="{% static 'css/axure_rp_page.css' %}" type="text/css" rel="stylesheet"/>
+    <link href="{% static 'files/manager/styles.css' %}" type="text/css" rel="stylesheet"/>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script src="{% static 'scripts/jquery-ui-1.8.10.custom.min.js' %}"></script>
+    <script src="{% static 'scripts/prototypePre.js' %}"></script>
+    <script src="{% static 'data/document.js' %}"></script>
+    <script src="{% static 'scripts/prototypePost.js' %}"></script>
+
+    <script src="{% static 'files/manager/data.js' %}"></script>
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+      <style>
+
+.button {
+
+background-color: rgba(0, 0, 0, 0.73);
+
+border: none;
+
+color: white;
+
+padding: 15px 32px;
+
+text-align: center;
+
+text-decoration: none;
+
+display: inline-block;
+
+font-size: 16px;
+
+margin: 4px 2px;
+
+cursor: pointer;
+
+}
+
+</style>
+
+
+  </head>
+  <body onload="printf()">
+    <div id="base" class="">
+
+      <!-- Unnamed (矩形) -->
+      <div id="u101" class="ax_default box_1">
+        <div id="u101_div" class=""></div>
+        <div id="u101_text" class="text ">
+          <p><span>&nbsp;&nbsp; 分布式管理系统（酒店经理）</span></p>
+        </div>
+      </div>
+
+
+      <!-- Unnamed (矩形) -->
+      <div id="u105" class="ax_default">
+        <div id="u105_div" class=""></div>
+        <div id="u105_text" class="text ">
+          <p><span>日报表</span></p>
+        </div>
+      </div>
+
+
+
+
+
+        <div id="u106" class="ax_default" style="margin: 180px;left: 50px;">
+            <button class="button" onclick="printReport()">打印报表</button>
+
+
+          <table class="table">
+            <thead>
+                <tr>
+                    <th>房间号</th>
+                    <th>开机次数</th>
+                    <th>最常用温度</th>
+                    <th>最常用风速</th>
+                    <th>被调度次数</th>
+                    <th>详单数</th>
+                    <th>调温次数</th>
+                    <th>调风次数</th>
+                    <th>总费用</th>
+                    <th>服务时长</th>
+                </tr>
+            </thead>
+
+            <tbody id="ko">
+
+            </tbody>
+          </table>
+      </div>
+
+
+    </div>
+  </body>
+</html>
+<script type="application/javascript">
+    function printReport() {
+
+
+
+        $.ajax({
+            type : 'GET',
+            url:"/printReport",
+            crossDomain:true,
+            success:function (data) {
+                alert("打印成功！")
+            }
+        })
+
+    }
+    function printf() {
+
+        var tbody = window.document.getElementById("ko");
+
+
+
+       // setTimeout("printf()",1000*20);
+
+
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+            url: "/queryreport/",
+            crossDomain:true,
+            success:function (data) {
+                var str=""
+                    for (var i=0;i< data['items'].length;i++){
+                        str += "<tr>" +
+            "<td>"+data['items'][i].roomid+"</td>"+
+            "<td>"+data['items'][i].use_times+"</td>"+
+            "<td>"+data['items'][i].fre_temp+"</td>"+
+            "<td>"+data['items'][i].fre_speed+"</td>"+
+            "<td>"+data['items'][i].dispatch_times+"</td>"+
+            "<td>"+data['items'][i].details_times+"</td>"+
+            "<td>"+data['items'][i].change_temp_times+"</td>"+
+            "<td>"+data['items'][i].change_speed_times+"</td>"+
+            "<td>"+data['items'][i].sumcost+"</td>"+
+
+            "</tr>" ;
+         tbody.innerHTML=str;
+                    }
+
+            },
+
+            error: function () {
+                alert("查询失败")
+            }
+        });
+
+    }
+
+</script>
+

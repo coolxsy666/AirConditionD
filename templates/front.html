@@ -1,0 +1,240 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>front</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+
+      <link href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/jquery-ui-themes.css' %}" type="text/css" rel="stylesheet"/>
+    <link href="{% static 'css/axure_rp_page.css' %}" type="text/css" rel="stylesheet"/>
+    <link href="{% static 'data/styles.css' %}" type="text/css" rel="stylesheet"/>
+    <link href="{% static 'files/front/styles.css' %}" type="text/css" rel="stylesheet"/>
+
+    <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
+    <script src="{% static 'scripts/jquery-ui-1.8.10.custom.min.js' %}"></script>
+    <script src="{% static 'scripts/prototypePre.js' %}"></script>
+    <script src="{% static 'data/document.js' %}"></script>
+    <script src="{% static 'scripts/prototypePost.js' %}"></script>
+    <script src="{% static 'files/costomer/data.js' %}"></script>
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+  </head>
+  <body>
+    <div id="base" class="">
+
+      <!-- Unnamed (矩形) -->
+      <div id="u74" class="ax_default box_1">
+        <div id="u74_div" class=""></div>
+        <div id="u74_text" class="text ">
+          <p><span>&nbsp;&nbsp; 分布式管理系统（前台）</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u75" class="ax_default box_2">
+        <div id="u75_div" class=""></div>
+      </div>
+
+
+
+      <!-- Unnamed (矩形) -->
+      <div id="u77" class="ax_default label">
+        <div id="u77_div" class=""></div>
+        <div id="u77_text" class="text ">
+          <p><span>请输入房间号：</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+        <form name="id">
+      <div id="u78" class="ax_default text_field">
+        <input id="u78_input" name="room_id" type="text" value=""/>
+      </div>
+        </form>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u79" class="ax_default button">
+        <div id="u79_div" class=""></div>
+        <div id="u79_text" class="text " onclick="quitroom()">退房</div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u80" class="ax_default label">
+        <div id="u80_div" class=""></div>
+        <div id="u80_text" class="text ">
+          <p><span>账单</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (表格) -->
+      <div id="u81" class="ax_default">
+        <table class="table">
+    <thead>
+      <tr>
+          <th>房间号</th>
+        <th>总费用</th>
+        <th>入住时间</th>
+        <th>退房时间</th></tr>
+    </thead>
+    <tbody id="sumcost">
+
+
+    </tbody>
+  </table>
+
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u88" class="ax_default label">
+        <div id="u88_div" class=""></div>
+        <div id="u88_text" class="text ">
+          <p><span>详单</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (表格) -->
+      <div id="u89" class="ax_default">
+<table class="table">
+    <thead>
+      <tr>
+          <th>序号</th>
+        <th>请求类型</th>
+        <th>请求数据</th>
+        <th>请求时间</th>
+          <th>截止费用</th>
+          <th></th>
+      </tr>
+    </thead>
+    <tbody id="details">
+      <tr>
+          <td id="5"></td>
+          <td id="6"></td>
+          <td id="7"></td>
+        <td id="8"></td>
+        <td id="9"></td>
+        <td id="10"></td></tr>
+
+    </tbody>
+  </table>
+
+
+      </div>
+
+
+
+
+      <!-- Unnamed (矩形) -->
+      <div id="u96" class="ax_default button">
+        <div id="u96_div" class=""></div>
+        <div id="u96_text" class="text "onclick="printSpec()">
+          <p><span>打印</span></p>
+        </div>
+      </div>
+
+
+
+      <!-- Unnamed (矩形) -->
+      <div id="u99" class="ax_default button">
+        <div id="u99_div" class=""></div>
+        <div id="u99_text" class="text "onclick="printBill()">
+          <p><span>打印</span></p>
+        </div>
+      </div>
+
+
+    </div>
+  </body>
+</html>
+<script type="application/javascript">
+    function quitroom() {
+
+        var room_id = id.room_id.value;
+        var costBody = window.document.getElementById("sumcost");
+        var detailsBody = window.document.getElementById("details");
+
+        $.ajax({
+            type : 'GET',
+            url:"/quitroom/"+room_id,
+            crossDomain:true,
+            success:function (data) {
+            var str=""
+            for (var i=0;i< data['items'].length;i++){
+            str += "<tr>" +
+            "<td align='left'>"+data['items'][i].id+"</td>"+
+            "<td align='left'>"+data['items'][i].type+"</td>"+
+            "<td align='left'>"+data['items'][i].data+"</td>"+
+            "<td align='left'>"+data['items'][i].time+"</td>"+
+
+            "<td align='left'>"+data['items'][i].cost+"</td>"+
+
+            "</tr>" ;
+
+            }
+            var str1=""
+            for (var i=0;i< data['invoice'].length;i++){
+            str1 += "<tr>" +
+            "<td align='left'>"+data['invoice'][i].roomid+"</td>"+
+            "<td align='left'>"+data['invoice'][i].cost+"</td>"+
+            "<td align='left'>"+data['invoice'][i].checkIn+"</td>"+
+            "<td align='left'>"+data['invoice'][i].checkOut+"</td>"+
+
+
+
+            "</tr>" ;
+
+            }
+                    detailsBody.innerHTML=str;
+            costBody.innerHTML=str1;
+        }})
+
+
+    }
+
+</script>
+
+<script type="application/javascript">
+    function printSpec() {
+
+
+
+        $.ajax({
+            type : 'GET',
+            url:"/printSpec",
+            crossDomain:true,
+            success:function (data) {
+                alert("打印成功！")
+            }
+        })
+
+    }
+
+</script>
+<script type="application/javascript">
+    function printBill() {
+
+        var room_id = id.room_id.value;
+
+         document.getElementById("5").innerHTML=room_id;
+         document.getElementById("6").innerHTML="空调状态-制冷";
+         document.getElementById("7").innerHTML="总费用";
+         document.getElementById("8").innerHTML="服务状态";
+         document.getElementById("9").innerHTML="服务状态";
+         document.getElementById("10").innerHTML="服务状态";
+
+        $.ajax({
+            type : 'GET',
+            url:"/printBill/"+room_id,
+            crossDomain:true,
+            success:function () {
+            }
+        })
+
+    }
+
+</script>

@@ -1,0 +1,436 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>costomer</title>
+{#    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>#}
+{#    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>#}
+{#    <meta name="apple-mobile-web-app-capable" content="yes"/>#}
+
+
+    <link href="{% static 'data/styles.css' %}" type="text/css" rel="stylesheet"/>
+    <link href="{% static 'css/axure_rp_page.css' %}" type="text/css" rel="stylesheet"/>
+    <link href="{% static 'files/costomer/styles.css' %}" type="text/css" rel="stylesheet"/>
+    <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
+    <script src="{% static 'scripts/jquery-ui-1.8.10.custom.min.js' %}"></script>
+    <script src="{% static 'scripts/prototypePre.js' %}"></script>
+    <script src="{% static 'data/document.js' %}"></script>
+    <script src="{% static 'scripts/prototypePost.js' %}"></script>
+    <script src="{% static 'files/costomer/data.js' %}"></script>
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+  </head>
+  <body onload="flesh()">
+
+    <div id="base" class="">
+
+      <!-- Unnamed (矩形) -->
+      <div id="u0" class="ax_default box_1">
+        <div id="u0_div" class=""></div>
+        <div id="u0_text" class="text ">
+          <p><span>&nbsp;&nbsp; 分布式管理系统（用户）</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u1" class="ax_default box_1">
+        <img id="u1_img" class="img " src="/static/images/costomer/u1.png"/>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u2" class="ax_default image">
+        <img id="u2_img" class="img " src="/static/images/costomer/u2.png"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3" class="ax_default box_2">
+        <div id="u3_div" class="" style="font-size: 40px;">{{ room_id }}</div>
+      </div>
+
+      <!-- Unnamed (形状) -->
+      <div id="u4" class="ax_default icon">
+        <div id="u61" class="ax_default icon">
+          <button id="on" name="state" value="on" onclick="turn_on()">开</button>
+      </div>
+      <div id="u62" class="ax_default icon">
+          <button id="off" name="state" value="off" onclick="turn_off()">关</button>
+      </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u5" class="ax_default button">
+        <div id="u5_div" class=""></div>
+        <div id="u5_text" class="text ">
+          <p><span><a href="/front?room_no={{ room_id }}" style="text-decoration: none">退房</a></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u6" class="ax_default box_1">
+        <img id="u6_img" class="img " src="/static/images/costomer/u1.png"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u7" class="ax_default label">
+        <div id="u7_div" class=""></div>
+        <div id="u7_text" class="text ">
+          <p><span>温度</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (形状) -->
+      <div id="u8" class="ax_default icon" onclick="add_wendu()">
+        <img id="u8_img" class="img " src="/static/images/costomer/u8.png"/>
+      </div>
+
+      <!-- Unnamed (形状) -->
+      <div id="u9" class="ax_default icon" onclick="add_fengsu()">
+        <img id="u9_img" class="img " src="/static/images/costomer/u8.png"/>
+      </div>
+
+      <!-- Unnamed (形状) -->
+      <div id="u10" class="ax_default icon" onclick="decrease_wendu()">
+        <img id="u10_img" class="img " src="/static/images/costomer/u10.png"/>
+      </div>
+
+      <!-- Unnamed (形状) -->
+      <div id="u11" class="ax_default icon" onclick="decrease_fengsu()">
+        <img id="u11_img" class="img " src="/static/images/costomer/u10.png"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u12" class="ax_default label">
+        <div id="u12_div" class=""></div>
+        <div id="u12_text" class="text ">
+          <p><span>风速</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u13" class="ax_default label">
+        <div id="u13_div" class=""></div>
+        <div id="u13_text" class="text ">
+          <p><span>℃</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15" class="ax_default box_1">
+        <div id="u15_div" class=""></div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u16" class="ax_default box_1">
+        <div id="u16_div" class=""></div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u17" class="ax_default box_1">
+        <img id="u17_img" class="img " src="/static/images/costomer/u1.png"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u18" class="ax_default label">
+        <div id="u18_div" class=""></div>
+        <div id="u18_text" class="text ">
+          <p><span>当前室温：</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u19" class="ax_default label">
+        <div id="u19_div" class=""></div>
+        <div id="u19_text" class="text ">
+          <p><span>℃</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u20" class="ax_default box_1">
+        <div id="u20_div" class=""></div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u21" class="ax_default box_1">
+        <img id="u21_img" class="img " src="/static/images/costomer/u1.png"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u22" class="ax_default label">
+        <div id="u22_div" class=""></div>
+        <div id="u22_text" class="text ">
+          <p><span>空调状态：</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u23" class="ax_default box_1">
+        <div id="u23_div" class=""></div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u24" class="ax_default box_1">
+        <img id="u24_img" class="img " src="/static/images/costomer/u24.png"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u25" class="ax_default label">
+        <div id="u25_div" class=""></div>
+        <div id="u25_text" class="text ">
+          <p><span>总费用</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u26" class="ax_default label">
+        <div id="u26_div" class=""></div>
+        <div id="u26_text" class="text ">
+          <p><span>元</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u27" class="ax_default box_1">
+        <div id="u27_div" class=""></div>
+      </div>
+
+      <!-- Unnamed (椭圆形) -->
+      <div id="u28" class="ax_default ellipse">
+        <img id="u28_img" class="img " src="/static/images/costomer/u28.png"/>
+      </div>
+
+      <!-- Unnamed (椭圆形) -->
+      <div id="u29" class="ax_default ellipse">
+        <img id="u29_img" class="img " src="/static/images/costomer/u29.png"/>
+      </div>
+
+              <div id="u34" class="ax_default box_1">
+        <img id="u34_img" class="img " src="/static/images/costomer/u24.png"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u35" class="ax_default label">
+        <div id="u35_div" class=""></div>
+        <div id="u35_text" class="text ">
+          <p><span>服务状态</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u36" class="ax_default label">
+        <div id="u36_div" class=""></div>
+        <div id="u36_text" class="text ">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u37" class="ax_default box_1">
+        <div id="u37_div" class="" style="font-size: 30px;"></div>
+      </div>
+    </div>
+  </body>
+</html>
+<script type="application/javascript">
+    function add_wendu() {
+        var wendu = $("#u15_div").html();
+        //$("#u15_div").html(parseInt(wendu) + 1);
+        // alert("提高温度请求已发送！")
+        var room_id = document.getElementById("u3_div").innerHTML;
+
+        $.ajax({
+            type : 'GET',
+            url:"/slave/temp/high/"+room_id,
+            crossDomain:true,
+            success:function (data) {
+                if (data['isError']==0){
+                document.getElementById("u15_div").innerHTML=data['tar_temp'];//温度
+                 document.getElementById("u16_div").innerHTML=data['speed']//"风速";
+                 document.getElementById("u20_div").innerHTML=data['cur_temp'];//"当前温度";
+                 document.getElementById("u23_div").innerHTML=data['mode']//"空调状态-制冷";
+                 document.getElementById("u27_div").innerHTML=data['cost']//"总费用";
+                 document.getElementById("u37_div").innerHTML=data['state']//"服务状态";
+            }   else{
+                    alert(data['content'])
+                }
+            }
+        })
+
+    }
+
+</script>
+
+<script type="application/javascript">
+    function decrease_wendu() {
+        var wendu = $("#u15_div").html();
+        //$("#u15_div").html(parseInt(wendu) - 1);
+        //alert("降低温度请求已发送！")
+        var room_id = document.getElementById("u3_div").innerHTML;
+
+        $.ajax({
+            type : 'GET',
+            url:"/slave/temp/low/"+room_id,
+            crossDomain:true,
+            success:function (data) {
+                if (data['isError']==0){
+                document.getElementById("u15_div").innerHTML=data['tar_temp'];//温度
+                 document.getElementById("u16_div").innerHTML=data['speed']//"风速";
+                 document.getElementById("u20_div").innerHTML=data['cur_temp'];//"当前温度";
+                 document.getElementById("u23_div").innerHTML=data['mode']//"空调状态-制冷";
+                 document.getElementById("u27_div").innerHTML=data['cost']//"总费用";
+                 document.getElementById("u37_div").innerHTML=data['state']//"服务状态";
+            }   else{
+                    alert(data['content'])
+                }
+            }
+        })
+
+    }
+
+</script>
+
+<script type="application/javascript">
+    function add_fengsu() {
+        var fengsu = $("#u16_div").html();
+        //$("#u16_div").html(parseInt(fengsu) + 1);
+        //alert("增加风速请求已发送！")
+        var room_id = document.getElementById("u3_div").innerHTML;
+
+        $.ajax({
+            type : 'GET',
+            url:"/slave/speed/high/"+room_id,
+            crossDomain:true,
+            success:function (data) {
+                if (data['isError']==0){
+                document.getElementById("u15_div").innerHTML=data['tar_temp'];//温度
+                 document.getElementById("u16_div").innerHTML=data['speed']//"风速";
+                 document.getElementById("u20_div").innerHTML=data['cur_temp'];//"当前温度";
+                 document.getElementById("u23_div").innerHTML=data['mode']//"空调状态-制冷";
+                 document.getElementById("u27_div").innerHTML=data['cost']//"总费用";
+                 document.getElementById("u37_div").innerHTML=data['state']//"服务状态";
+            }   else{
+                    alert(data['content'])
+                }
+            }
+        })
+
+    }
+
+</script>
+
+<script type="application/javascript">
+    function decrease_fengsu() {
+        var fengsu = $("#u16_div").html();
+        //$("#u16_div").html(parseInt(fengsu) - 1);
+       // alert("降低风速请求已发送！")
+        var room_id = document.getElementById("u3_div").innerHTML;
+
+        $.ajax({
+            type : 'GET',
+            url:"/slave/speed/low/"+room_id,
+            crossDomain:true,
+            success:function (data) {
+                if (data['isError']==0){
+                document.getElementById("u15_div").innerHTML=data['tar_temp'];//温度
+                 document.getElementById("u16_div").innerHTML=data['speed']//"风速";
+                 document.getElementById("u20_div").innerHTML=data['cur_temp'];//"当前温度";
+                 document.getElementById("u23_div").innerHTML=data['mode']//"空调状态-制冷";
+                 document.getElementById("u27_div").innerHTML=data['cost']//"总费用";
+                 document.getElementById("u37_div").innerHTML=data['state']//"服务状态";
+            }   else{
+                    alert(data['content'])
+                }
+            }
+        })
+
+    }
+
+</script>
+
+<script type="application/javascript">
+    function turn_on() {
+
+        var room_id = document.getElementById("u3_div").innerHTML;
+
+
+        $.ajax({
+            type : 'GET',
+            url:"/slave/turnon/"+room_id,
+            crossDomain:true,
+            success:function (data) {
+                 if (data['isError']==0){
+                document.getElementById("u15_div").innerHTML=data['tar_temp'];//温度
+                 document.getElementById("u16_div").innerHTML=data['speed']//"风速";
+                 document.getElementById("u20_div").innerHTML=data['cur_temp'];//"当前温度";
+                 document.getElementById("u23_div").innerHTML=data['mode']//"空调状态-制冷";
+                 document.getElementById("u27_div").innerHTML=data['cost']//"总费用";
+                 document.getElementById("u37_div").innerHTML=data['state']//"服务状态";
+            }   else{
+                    alert(data['content'])
+                }
+            },
+            error:function () {
+                alert("开机失败")
+            }
+        })
+        //flesh()
+    }
+</script>
+
+<script type="application/javascript">
+    function turn_off() {
+
+        var room_id = document.getElementById("u3_div").innerHTML;
+
+
+
+        $.ajax({
+            type : 'GET',
+            url:"/slave/turnoff/"+room_id,
+            crossDomain:true,
+            success:function (data) {
+                document.getElementById("u15_div").innerHTML=data['tar_temp'];//温度
+                 document.getElementById("u16_div").innerHTML=data['speed']//"风速";
+                 document.getElementById("u20_div").innerHTML=data['cur_temp'];//"当前温度";
+                 document.getElementById("u23_div").innerHTML=data['mode']//"空调状态-制冷";
+                 document.getElementById("u27_div").innerHTML=data['cost']//"总费用";
+                 document.getElementById("u37_div").innerHTML=data['state']//"服务状态";
+            },errot:function () {
+                alert("关机失败")
+            }
+        })
+
+    }
+</script>
+
+<script type="application/javascript">
+    function flesh() {
+
+        setTimeout("flesh()",1000*5);
+
+
+        var room_id = document.getElementById("u3_div").innerHTML;
+
+
+
+        $.ajax({
+            type : 'GET',
+            url:"/slave/"+room_id,
+            crossDomain:true,
+            success:function (data) {
+                document.getElementById("u15_div").innerHTML=data['tar_temp'];//温度
+                 document.getElementById("u16_div").innerHTML=data['speed']//"风速";
+                 document.getElementById("u20_div").innerHTML=data['cur_temp'];//"当前温度";
+                 document.getElementById("u23_div").innerHTML=data['mode']//"空调状态-制冷";
+                 document.getElementById("u27_div").innerHTML=data['cost']//"总费用";
+                 document.getElementById("u37_div").innerHTML=data['state']//"服务状态";
+            },error:function () {
+                alert("刷新失败！")
+            }
+        })
+
+    }
+</script>
