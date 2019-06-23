@@ -95,14 +95,24 @@ def queryReport(request):
 # printSpec(request, roomid):打印详单
 # printBill(request, roomid):打印账单
 # -------------------------------------------------------------
+def printSpec(request, roomid):
+    PrintRDR(roomid)
+    return HttpResponse("打印成功")
+
+
+def printBill(request, roomid):
+    PrintInvoice(roomid)
+    return HttpResponse("打印账单成功")
+
+
 def quitroom(requesty, roomid):
     u = User.objects.get(roomid=roomid)
     u.state = 0
     u.speed = 0
     u.save()
 
-    # m.setInstance(u)
-    # m.Dispatch()
+    m.setInstance(u)
+    m.Dispatch()
 
     for x in slaves:
         if x.roomid == roomid:
@@ -115,7 +125,7 @@ def quitroom(requesty, roomid):
     r.save()
 
     details = CreatRDR(roomid)
-    PrintRDR(roomid)
+
     requestList = Request.objects.filter(roomid=roomid)
 
     data = {}
@@ -169,8 +179,7 @@ def printReport(request):
     return HttpResponse(200)
 
 
-def printBill(request, roomid):
-    pass
+
 
 
 # 测试

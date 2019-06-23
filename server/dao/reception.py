@@ -22,7 +22,7 @@ r = RDR()
 # 创建详单
 def CreatRDR(RoomId):
     rdr_list = Request.objects.filter(roomid=RoomId)
-    x = 1
+    x = 0
     for y in rdr_list:
         r.id.append(x)
         if y.temp == -1:
@@ -44,7 +44,7 @@ def PrintRDR(RoomId):
     file = open(full_path, 'w')
     x = 0
 
-    for x in range(1, len(r.id)):
+    for x in range(0, len(r.id)):
         file.write('序号'+str(r.id[x]) + ' 请求类型' + str(r.type[x]) +
                    ' 请求数据' + str(r.data[x]) + ' 请求时间' + str(r.time[x]) +
                    ' 截止费用' + str(r.cost[x]) + '\n')
@@ -60,8 +60,8 @@ def CreatInvoice(RoomId):
 
 # 打印账单
 def PrintInvoice(RoomId):
-    cost = User.objects.filter(roomid=RoomId)
-    full_path = RoomId + 'Invoice' + '.txt'
+    cost = User.objects.get(roomid=RoomId)
+    full_path = 'Bills/'+RoomId + '_Bill' + '.txt'
     file = open(full_path, 'w')
-    file.write(cost.id + ' ' + cost.roomid + ' ' + cost.cost + '\n')
+    file.write( '房间号：' + str(cost.roomid) + '   总计花费' + str(cost.cost) + '\n')
     file.close()

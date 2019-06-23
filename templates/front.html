@@ -132,7 +132,7 @@
       <!-- Unnamed (矩形) -->
       <div id="u96" class="ax_default button">
         <div id="u96_div" class=""></div>
-        <div id="u96_text" class="text "onclick="printSpec()">
+        <div id="u96_text" class="text "onclick="printBill()">
           <p><span>打印</span></p>
         </div>
       </div>
@@ -142,7 +142,7 @@
       <!-- Unnamed (矩形) -->
       <div id="u99" class="ax_default button">
         <div id="u99_div" class=""></div>
-        <div id="u99_text" class="text "onclick="printBill()">
+        <div id="u99_text" class="text "onclick="printSpec()">
           <p><span>打印</span></p>
         </div>
       </div>
@@ -200,12 +200,13 @@
 
 <script type="application/javascript">
     function printSpec() {
+        var room_id = id.room_id.value;
 
 
 
         $.ajax({
             type : 'GET',
-            url:"/printSpec",
+            url:"/printSpec/"+room_id,
             crossDomain:true,
             success:function (data) {
                 alert("打印成功！")
@@ -220,18 +221,14 @@
 
         var room_id = id.room_id.value;
 
-         document.getElementById("5").innerHTML=room_id;
-         document.getElementById("6").innerHTML="空调状态-制冷";
-         document.getElementById("7").innerHTML="总费用";
-         document.getElementById("8").innerHTML="服务状态";
-         document.getElementById("9").innerHTML="服务状态";
-         document.getElementById("10").innerHTML="服务状态";
+
 
         $.ajax({
             type : 'GET',
             url:"/printBill/"+room_id,
             crossDomain:true,
             success:function () {
+                alert("打印账单成功！")
             }
         })
 

@@ -1,21 +1,20 @@
 from django.urls import path
 
 from . import views
-from .dao import slave,master
+from .dao import slave, master
+
 urlpatterns = [
     path('', views.choose, name='index'),
     path(r'test/', views.testb, name='login'),
 
-    #前台路由
+    # 前台路由
     path(r'customer_login/', views.customer_login, name='login'),
     path(r'login_customer/', views.login_customer),
     path(r'root_login/', views.root_login),
 
-
-
     # 客户
     path(r'login/', slave.login),
-    path(r'slave/<roomid>/index',slave.index),
+    path(r'slave/<roomid>/index', slave.index),
     path(r'slave/<roomid>/', slave.slave),  # 从控机主页
 
     path(r'slave/temp/<op>/<roomid>/', slave.tempControl),  # 请求改变温度，op=high时增加一度，=low时减小
@@ -38,6 +37,6 @@ urlpatterns = [
     # 前台
     path(r'front/', views.front),  # 打印详单
     path(r'quitroom/<roomid>/', views.quitroom),  # 打印详单
-    #path(r'printSpec/<roomid>/', views.printSpec),  # 打印详单
+    path(r'printSpec/<roomid>/', views.printSpec),  # 打印详单
     path(r'printBill/<roomid>/', views.printBill),  # 打印账单
 ]

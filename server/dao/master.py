@@ -131,7 +131,7 @@ class Master:
                                                                                        self.serviceQueue) == 0:
             print("----------新空调开机调度，服务队列满了------------")
 
-            self.instance.wait_time = 16
+            self.instance.wait_time = 120
             self.instance.state = 2
             self.waitQueue.append(self.instance)  # 放入等待队列
         # 其他的情况就是服务或是等待队列中的从机风速发生变化,或者时间片调度
@@ -145,7 +145,7 @@ class Master:
 
                 self.serviceQueue.remove(max_temp)
                 max = User.objects.get(roomid=max_temp.roomid)
-                max.wait_time = 40  # 分配一个等待服务时长
+                max.wait_time = 120  # 分配一个等待服务时长
                 max.state = 2
                 self.waitQueue.append(max)  # 进入等待队列
                 max.save()
@@ -168,7 +168,7 @@ class Master:
                     min_temp = self.serviceQueue[self.find_min()]
                     self.serviceQueue.remove(min_temp)
                     min = User.objects.get(roomid=min_temp.roomid)
-                    min.wait_time = 40  # 分配一个等待服务时长
+                    min.wait_time = 120  # 分配一个等待服务时长
                     min.state = 2
                     self.waitQueue.append(min)  # 取出服务队列中风速最小的
                     min.save()
@@ -184,7 +184,7 @@ class Master:
                     temp_max = self.serviceQueue[self.find_max()]
                     self.serviceQueue.remove(temp_max)
                     max = User.objects.get(roomid=temp_max.roomid)
-                    max.wait_time = 40  # 分配一个等待服务时长
+                    max.wait_time = 10*60  # 分配一个等待服务时长
                     max.state = 2
                     self.waitQueue.append(max)  # 取出服务队列中服务时长最长的
                     max.save()
@@ -209,7 +209,7 @@ class Master:
                             self.serviceQueue.remove(temp_max)
 
                             max = User.objects.get(roomid=temp_max.roomid)
-                            max.wait_time = 40
+                            max.wait_time = 120
                             max.state = 2
                             max.speed = 0
                             max.save()
@@ -217,7 +217,7 @@ class Master:
 
                         x_temp = User.objects.get(roomid=x.roomid)
                         x_temp.state = 1
-                        x_temp.wait_time = 40
+                        x_temp.wait_time = 120
                         x_temp.serve_time = 0
                         temp = self.return_repeat(x_temp, self.waitQueue)
                         self.waitQueue.remove(temp)

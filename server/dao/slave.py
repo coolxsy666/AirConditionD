@@ -30,7 +30,7 @@ class Slave:
     energy = 0
     energyRate = 1  # 耗电标准 高风：1度/1分钟 中风：1度/2分钟 低风：1度/3分钟
 
-    frequency = 10  # 温度更新时间频率
+    frequency = 60  # 温度更新时间频率
     rate = 0.4  # 温度每分钟改变速率，中风0.5 高风多20％ 低风低20％
     shutDownRate = 0.5  # 关机状态下温度每分钟改变速率
     startTime = 0  # 启动时间
@@ -58,11 +58,11 @@ class Slave:
 
     # 若目标温度已到达，则风速降为0
     def update(self):
-        self.u.cur_temp = round(self.cur_temp)
+        self.u.cur_temp = round(self.cur_temp,1)
         self.u.cost = self.cost
         self.u.energy = self.energy
         # 若已经到达目标风速
-       # if self.cur_temp == self.tar_temp:
+        # if self.cur_temp == self.tar_temp:
 
         self.u.save()
 
@@ -76,9 +76,16 @@ class Slave:
                 # 开机状态，且风速不为零
                 if self.u.state == 1 and self.u.speed != 0:
 
-                    temp = self.rate + (self.speed - 1) * self.rate * 0.2  # 每分钟温度变化度数
-                    self.energy += self.energyRate * self.speed / 3
-                    self.cost += self.energyRate * self.speed / 3
+                    temp = self.rate + (self.speed - 1) * 0.1  # 每分钟温度变化度数
+                    if self.speed == 1:
+                        self.energy += self.energyRate * self.speed / 3
+                        self.cost += self.energyRate * self.speed / 3
+                    elif self.speed == 2:
+                        self.energy += self.energyRate * self.speed / 4
+                        self.cost += self.energyRate * self.speed / 4
+                    else:
+                        self.energy += self.energyRate * self.speed / 3
+                        self.cost += self.energyRate * self.speed / 3
                     if self.tar_temp > self.cur_temp:
 
                         self.cur_temp = min(float(self.cur_temp) + temp,
@@ -88,13 +95,13 @@ class Slave:
 
                         self.cur_temp = max(float(self.cur_temp) - temp,
                                             float(self.tar_temp))
-                    elif round(self.tar_temp) == round(self.cur_temp):
-                        self.cur_temp = round(self.cur_temp)
+                    elif round(self.tar_temp,1) <= round(self.cur_temp,1):
+                        self.cur_temp = round(self.cur_temp,1)
                         self.update()
                         self.u.state = 2
-                        self.u.speed=0
+                        self.u.speed = 0
                         self.u.save()
-                        self.u.wait_time=20
+                        self.u.wait_time = 60
                         m.setInstance(self.u)
                         daily_temp = dailyreport.objects.get(roomid=self.u.roomid)
                         daily_temp.dispatch_times += 1
@@ -214,8 +221,6 @@ def login(request):
             u = User(roomid=username, cur_temp=g["default_temp"], tar_temp=g["default_temp"])
             u.save()
 
-
-
         r = dailyreport(roomid=username, time=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
         r.save()
         str2 = 'traceback.format_exc():\n%s' % traceback.format_exc()
@@ -269,17 +274,19 @@ def turnOff(request, roomid):
 
         m.setInstance(u)
         m.Dispatch()
-
-        for x in slaves:
-            if x.roomid == roomid:
-                x.logout = 1
-
-                break
+        # logout值为1的话说明不再计算温度了，所以放到退房中
+        # for x in slaves:
+        #     if x.roomid == roomid:
+        #         x.logout = 1
+        #
+        #         break
 
         r = dailyreport.objects.get(roomid=roomid)
         r.use_times += 1
         r.save()
-        return HttpResponse("关机成功")
+        data = getInfo(roomid)
+
+        return JsonResponse(data)
     except Exception:
 
         str3 = 'traceback.format_exc():\n%s' % traceback.format_exc()
